@@ -59,6 +59,9 @@ class RegisterView(View):
             messages.error(self.request, 'Email already exists.')
             return False
 
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            messages.error(self.request, 'Enter a valid email address.')
+
         return True
 
     def create_user(self, username, email, password):

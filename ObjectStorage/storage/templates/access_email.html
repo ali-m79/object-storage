@@ -1,0 +1,18 @@
+{% autoescape off %}
+
+Hi {{ user.username }},
+
+access to new objects has been granted.
+<br>
+
+object name : {{object}}
+<br>
+
+Please visit the following link to view the objects: 
+<br>
+<a href="http://127.0.0.1:8000{% url "main" %}">click</a>
+<br>
+<br>
+
+
+{% endautoescape %}

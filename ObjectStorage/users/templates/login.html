@@ -1,0 +1,190 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        .bg-brand {
+            background-color: #7288fa;
+        }
+        .text-light-01 {
+            color: #333f4e;
+        }
+        .text-light-02 {
+            color: #a3b2c7;
+        }
+        .custom-shadow {
+            box-shadow: 0px 10px 30px 0px rgba(66, 71, 97, 0.1);
+        }
+        .btn-brand {
+            background-color: #7288fa;
+            color: #fff;
+            border-radius: 20px;
+            width: 100%;
+
+        }
+        .mt-lg-custom {
+            margin-top: 107px;
+        }
+        .text-brand {
+            color: #7288fa;
+        }
+        .rounded-input {
+            border: none;
+        }
+        .rounded-bg-white {
+            border-radius: 10px;
+        }
+        .input-icon {
+            position: relative;
+        }
+        .input-icon .fa-eye,
+        .input-icon .fa-eye-slash {
+            position: absolute;
+            right: 35px;
+            top: 70%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            display: none;
+        }
+        html, body {
+            overflow-x: hidden;
+        }
+        .invalid-feedback {
+            display: none;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid bg-white rounded-lg p-0 ">
+    <div class="row">
+        <div class=" col-md-5 d-flex flex-column">
+            <div class="bg-brand d-flex flex-column flex-grow-1 p-lg-4 p-4">
+                <div class="d-flex mt-0 align-items-center">
+                    <img src="{% static 'logo.svg' %}" alt="logo">
+                    <h2 class="text-white ml-3">Storage</h2>
+                </div>
+                <h1 class="text-white mt-5">Manage your files the best way</h1>
+                <p class="text-white mt-3">Awesome, we've created the perfect place for you to store all your documents.</p>
+                <img class="img-fluid w-50 mt-lg-auto mt-5 mx-auto" src="{% static 'file.svg' %}" alt="Storage Image">
+            </div>
+        </div>
+        
+        
+        <div class="col-md-7 d-flex flex-column">
+            
+            <div class="d-flex flex-column my-auto p-lg-4 p-4 ">
+                <h1 class="text-light-01">Login</h1>
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == "error"%}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{message}}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                            {{message}}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+                    <form method="post" >
+                    {% csrf_token %}
+                        <div class="bg-white custom-shadow rounded-bg-white p-1 mt-4">
+                            <label class="text-light-01 px-2 mb-1">Username | Email</label>
+                            <input type="text" id="emailUsername" name="username_or_email" class="form-control text-light-02 rounded-input px-2 mt-0" placeholder="Enter your Username or Email" required>
+                        </div>
+                        <div class="invalid-feedback" id="emailUsernameFeedback">Please enter a valid email address or username</div>
+                        <div class="bg-white custom-shadow rounded-bg-white p-1 mt-4 input-icon">
+                            <label class="text-light-01  px-2 mb-1">Password</label>
+                            <input type="password" id="password" name="password" class="form-control text-light-02 rounded-input px-2 mt-0" placeholder="Enter Password" required>
+                            <i class="fas fa-eye" id="togglePassword"></i>
+                        </div>
+                        <div class="invalid-feedback" id="passwordFeedback">Password must be at least 6 characters, including one number, one special character (!@#$%&), one uppercase and one lowercase letter</div>
+                        <input type="submit" class="btn btn-brand mt-4 " value="Login">
+                    </form>
+                <p class="text-center text-light-01 mt-4">Don't have an account yet? <a href="{% url 'register' %}" class="text-brand">Create Account</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    const togglePassword = document.getElementById('togglePassword');
+    const emailUsername = document.getElementById('emailUsername');
+    const password = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const emailUsernameFeedback = document.getElementById('emailUsernameFeedback');
+    const passwordFeedback = document.getElementById('passwordFeedback');
+
+    togglePassword.addEventListener('click', function (e) {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+
+    emailUsername.addEventListener('input', function() {
+        validateEmailUsername();
+    });
+
+    password.addEventListener('input', function() {
+        togglePassword.style.display = this.value ? 'block' : 'none';
+        validatePassword();
+    });
+
+    loginBtn.addEventListener('click', function (e) {
+        if (!validateEmailUsername() || !validatePassword()) {
+            e.preventDefault();
+        } else {
+            // Perform login functionality, e.g., submit form or redirect to dashboard
+            // alert('Login Successful!');
+            // Replace with actual login logic, e.g., form submission or AJAX request
+            
+        }
+    });
+
+    function validateEmailUsername() {
+        const value = emailUsername.value;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const usernamePattern = /^[A-Za-z]{4,}$/; 
+        const isValid = emailPattern.test(value) || usernamePattern.test(value);
+        if (!isValid && value) {
+            emailUsernameFeedback.style.display = 'block';
+            emailUsername.classList.add('is-invalid');
+        } else {
+            emailUsernameFeedback.style.display = 'none';
+            emailUsername.classList.remove('is-invalid');
+        }
+        return isValid;
+    }
+        
+    function validatePassword() {
+        const passwordValue = password.value;
+        const passwordPattern = /^(?=.*\d)(?=.*[!@#$%&])(?=.*[a-z])(?=.*[A-Z]).{6,}$/;
+        const isValid = passwordPattern.test(passwordValue);
+        if (!isValid && passwordValue) {
+            passwordFeedback.style.display = 'block';
+            password.classList.add('is-invalid');
+        } else {
+            passwordFeedback.style.display = 'none';
+            password.classList.remove('is-invalid');
+        }
+        return isValid;
+    }
+</script>
+</body>
+</html>

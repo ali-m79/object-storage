@@ -1,7 +1,7 @@
 
 ---
 
-# Project Name
+# OBJECT STORAGE
 
 This Django project is a file storage application that allows users to upload, manage, and share files securely. It integrates with AWS S3 for scalable and reliable file storage.
 

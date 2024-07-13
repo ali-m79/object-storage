@@ -58,6 +58,9 @@ class RegisterView(View):
         if User.objects.filter(email=email).exists():
             messages.error(self.request, 'Email already exists.')
             return False
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            messages.error(self.request, 'Enter a valid email address.')
+            return False
 
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             messages.error(self.request, 'Enter a valid email address.')

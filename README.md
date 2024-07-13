@@ -1,4 +1,3 @@
-<img width="960" alt="image" src="https://github.com/user-attachments/assets/7c4f0fe6-45f7-46f6-a7f5-3f1e675295a7">
 ---
 
 # OBJECT STORAGE

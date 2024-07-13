@@ -21,17 +21,31 @@ class FileUploadService:
         """
         try:
             file_type = self._get_file_type(file.name)  # Determine file type based on file name
-            file_url = self.s3_service.upload_file(file, settings.AWS_STORAGE_BUCKET_NAME, file.name)
-            
+            print(file.name)
             # Check if the file already exists in the database
             existing_file = Object.objects.filter(name=file.name).first()
+         
+
+
+
 
             if existing_file and existing_file.owner == user:
                 # Update existing file metadata
+                file_url = self.s3_service.upload_file(file, settings.AWS_STORAGE_BUCKET_NAME, file.name)
                 self._update_file_metadata(existing_file)
-            else:
-                # Save new file metadata
+
+            elif existing_file and not (existing_file.owner == user):
+                # Save new file metadata with user id in the end of name
+                file.name = file.name.replace(file.name.split('.')[-1], '') + '_' + str(user.id) + '.' + file.name.split('.')[-1]
+                print(file.name)
+                file_url = self.s3_service.upload_file(file, settings.AWS_STORAGE_BUCKET_NAME, file.name)
                 self._save_file_metadata(user, file, file_url, file_type)
+
+            else :
+                # save with the orginal name
+                file_url = self.s3_service.upload_file(file, settings.AWS_STORAGE_BUCKET_NAME, file.name)
+                self._save_file_metadata(user, file, file_url, file_type)
+
         except Exception as e:
             raise Exception(f"Failed to upload file and save metadata: {str(e)}")
 

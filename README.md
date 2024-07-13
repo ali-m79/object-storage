@@ -1,9 +1,11 @@
-
+<img width="960" alt="image" src="https://github.com/user-attachments/assets/7c4f0fe6-45f7-46f6-a7f5-3f1e675295a7">
 ---
 
 # OBJECT STORAGE
 
 This Django project is a file storage application that allows users to upload, manage, and share files securely. It integrates with AWS S3 for scalable and reliable file storage.
+<img width="960" alt="image" src="https://github.com/user-attachments/assets/ec3758e6-c840-4b4b-a358-4eff07c0ce92">
+
 
 ## Features
 
